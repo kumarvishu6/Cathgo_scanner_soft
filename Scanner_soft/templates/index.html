@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Document Scanning | Cathgo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/upload">Upload Document</a></li>
+            <li><a href="/analytics">Analytics</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+    
+    <header>
+        <h1>Welcome to Document Scanning Dashboard</h1>
+        <button onclick="location.href='/upload'">Scan a Document</button>
+    </header>
+    
+    <section id="stats">
+        <div class="stat-box">Total Scans: <span id="total-scans">Loading...</span></div>
+        <div class="stat-box">Recent Uploads: <span id="recent-uploads">Loading...</span></div>
+        <div class="stat-box">Available Credits: <span id="credits">Loading...</span></div>
+    </section>
+    
+    <section id="analytics-preview">
+        <h2>Analytics Overview</h2>
+        <p>Top Scanned Topics: <span id="top-topics">Loading...</span></p>
+        <p>Most Active Users: <span id="top-users">Loading...</span></p>
+    </section>
+    
+    <footer>
+        <p>&copy; 2025 Cathgo Scanner Software</p>
+    </footer>
+    
+    <script>
+        $(document).ready(function() {
+            $.get('/api/stats')
+                .done(function(data) {
+                    $('#total-scans').text(data.total_scans);
+                    $('#recent-uploads').text(data.recent_uploads);
+                    $('#credits').text(data.credits_remaining);
+                    $('#top-topics').text(data.top_topics.join(', '));
+                    $('#top-users').text(data.top_users.join(', '));
+                })
+                .fail(function() {
+                    console.error('Error fetching stats data.');
+                    $('#total-scans, #recent-uploads, #credits, #top-topics, #top-users').text('N/A');
+                });
+        });
+    </script>
+</body>
+</html>

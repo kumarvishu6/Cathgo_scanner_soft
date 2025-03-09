@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Scanner Soft</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <form id="register-form" method="POST">
+            <h2>Register</h2>
+            <div class="input-field">
+                <input type="text" name="username" required>
+                <label>Enter your username</label>
+            </div>
+            <div class="input-field">
+                <input type="email" name="email" required>
+                <label>Enter your email</label>
+            </div>
+            <div class="input-field">
+                <input type="password" name="password" required>
+                <label>Enter your password</label>
+            </div>
+            <button type="submit">Register</button>
+            <div class="login">
+                <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+            </div>
+            <p id="register-status"></p>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#register-form").submit(function(event) {
+                event.preventDefault();
+                var formData = {
+                    username: $("input[name='username']").val(),
+                    email: $("input[name='email']").val(),
+                    password: $("input[name='password']").val()
+                };
+                
+                $.ajax({
+                    url: "/auth/register",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        $("#register-status").text("Registration successful! Redirecting to login...");
+                        setTimeout(function() { window.location.href = "/auth/login"; }, 2000);
+                    },
+                    error: function(xhr) {
+                        $("#register-status").text("Error registering. Please try again.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
